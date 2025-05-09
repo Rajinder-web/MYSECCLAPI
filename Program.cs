@@ -20,8 +20,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowBlazorApp",
         policy =>
         {
-            policy.WithOrigins(builder.Configuration["AllowedCorsOrigin"] ?? "https://localhost:7188", // Default Blazor WASM port, update if different
-                               "http://localhost:5184") // Allow http for Blazor dev server
+            policy.WithOrigins(builder.Configuration["AllowedCorsOrigin"] ?? "https://localhost:44632", // Default Blazor WASM port, update if different
+                               "http://localhost:44633") // Allow http for Blazor dev server
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
