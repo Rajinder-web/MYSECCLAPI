@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "MYSECCLAPI": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:27769;http://localhost:27770"
+    }
+  }
+}
