@@ -1,4 +1,4 @@
-﻿namespace MySECCLAppAPI.Models
+﻿namespace MYSECCLAPI.Models
 {
     public class SecclAuthRequest
     {

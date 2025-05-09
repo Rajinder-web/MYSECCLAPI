@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MYSECCLAPI;
 
-namespace MySECCLAppAPI.Controllers
+namespace MYSECCLAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]

@@ -3,6 +3,7 @@
     "MYSECCLAPI": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "swagger", // Ensure this points to Swagger
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

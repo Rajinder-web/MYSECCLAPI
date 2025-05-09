@@ -1,4 +1,4 @@
-using MySECCLAppAPI.Services;
+using MYSECCLAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

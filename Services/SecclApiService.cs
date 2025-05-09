@@ -1,9 +1,9 @@
-﻿using MySECCLAppAPI.Models;
+﻿using MYSECCLAPI.Models;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
 
-namespace MySECCLAppAPI.Services
+namespace MYSECCLAPI.Services
 {
     public class SecclApiService : ISecclApiService
     {

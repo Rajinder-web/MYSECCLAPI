@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MySECCLAppAPI.Dto;
-using MySECCLAppAPI.Services;
+using MYSECCLAPI.Dto;
+using MYSECCLAPI.Services;
 
-namespace MySECCLAppAPI.Controllers
+namespace MYSECCLAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController] 

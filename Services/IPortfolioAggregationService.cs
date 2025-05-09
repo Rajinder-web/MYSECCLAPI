@@ -1,6 +1,6 @@
-﻿using MySECCLAppAPI.Dto;
+﻿using MYSECCLAPI.Dto;
 
-namespace MySECCLAppAPI.Services
+namespace MYSECCLAPI.Services
 {
     public interface IPortfolioAggregationService
     {

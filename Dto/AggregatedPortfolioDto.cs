@@ -1,4 +1,4 @@
-﻿namespace MySECCLAppAPI.Dto
+﻿namespace MYSECCLAPI.Dto
 {
     public class AggregatedPortfolioDto
     {
