@@ -3,7 +3,7 @@ using MYSECCLAPI.Models;
 
 namespace MYSECCLAPI.Services
 {
-    public class PortfolioAggregationService: IPortfolioAggregationService
+    public class PortfolioAggregationService : IPortfolioAggregationService
     {
         private readonly ISecclApiService _secclApiService;
         private readonly ILogger<PortfolioAggregationService> _logger;
@@ -17,23 +17,19 @@ namespace MYSECCLAPI.Services
         public async Task<AggregatedPortfolioDto> GetAggregatedDataAsync(IEnumerable<string> portfolioIds)
         {
             var accessToken = await _secclApiService.GetAccessTokenAsync();
-            if(string.IsNullOrEmpty(accessToken))
+            if (string.IsNullOrEmpty(accessToken))
             {
                 return new AggregatedPortfolioDto
                 {
-                    LastUpdated = DateTime.UtcNow,
                     PortfolioTotalValue = 0,
-                    TotalAccounts=0,
-                    PortfolioAllAccountTotal = 0,
-                    //ValueByAccountType = new Dictionary<string, decimal>(),
+                    TotalAccounts = 0,
+                    PortfolioAllAccountsTotal = 0,
+                    AccountType = string.Empty,
                     FetchedPortfolioIds = new List<string>()
                 };
             }
-            var aggregatedDto = new AggregatedPortfolioDto
-            {
-                LastUpdated = DateTime.UtcNow
-            };
-
+            AggregatedPortfolioDto aggregatedDto = new AggregatedPortfolioDto();
+            
             var portfolioTasks = portfolioIds.Select(async id =>
             {
                 try
@@ -49,44 +45,47 @@ namespace MYSECCLAPI.Services
             }).ToList();
 
             var results = await Task.WhenAll(portfolioTasks);
-            double totalcurrentvalue = 0;
+            double totalCurrentValue = 0;
             foreach (var result in results)
             {
                 if (result.Valuation != null)
                 {
                     aggregatedDto.FetchedPortfolioIds.Add(result.Id);
-                    aggregatedDto.TotalAccounts = result.Valuation.data.accounts.Count;
-                    aggregatedDto.PortfolioTotalValue = (decimal)result.Valuation.data.currentValue;
-                    foreach (var account in result.Valuation.data.accounts)
-                    {
-                        totalcurrentvalue += account.currentValue;
-                    }
+                    aggregatedDto.TotalAccounts += result.Valuation.data.accounts.Count;
+                    aggregatedDto.PortfolioTotalValue += (decimal)result.Valuation.data.currentValue;
+                   
                     // If API provides total value directly for the portfolio
-                    // aggregatedDto.TotalCombinedValue += result.Valuation.TotalValue;
+                    totalCurrentValue += result.Valuation.data.accounts.Sum(account => account.currentValue);
 
-                    // If we need to sum holdings
-                    //foreach (var holding in result.Valuation.Holdings)
-                    //{
-                    //    aggregatedDto.TotalCombinedValue += holding.Value; // Sum total value
+                    // If we need to Sum total value
 
-                    //    if (!string.IsNullOrEmpty(holding.AccountType))
-                    //    {
-                    //        if (aggregatedDto.ValueByAccountType.ContainsKey(holding.AccountType))
-                    //        {
-                    //            aggregatedDto.ValueByAccountType[holding.AccountType] += holding.Value;
-                    //        }
-                    //        else
-                    //        {
-                    //            aggregatedDto.ValueByAccountType[holding.AccountType] = holding.Value;
-                    //        }
-                    //    }
-                    //}
+                    aggregatedDto.PortfolioAllAccountsTotal += totalCurrentValue;
+
+
+                    var totalsByAccountType = result.Valuation.data.accounts
+            .GroupBy(account => account.accountType)
+            .Select(group => new
+            {
+                AccountType = group.Key,
+                TotalCurrentValue = group.Sum(account => account.currentValue)
+            });
+
+                    foreach (var item in totalsByAccountType)
+                    {
+                        if (!string.IsNullOrEmpty(item.AccountType))
+                        {
+                            aggregatedDto.AccountType = item.AccountType;
+
+                            aggregatedDto.PortfolioAllAccountsTotal = item.TotalCurrentValue;
+                        }
+
+                    }
+
                 }
             }
-            aggregatedDto.PortfolioAllAccountTotal = (decimal)totalcurrentvalue;
-            
-            
+
             return aggregatedDto;
         }
+
     }
 }
