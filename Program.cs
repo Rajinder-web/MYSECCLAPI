@@ -3,7 +3,7 @@ using MYSECCLAPI.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -17,15 +17,17 @@ builder.Services.AddScoped<IPortfolioAggregationService, PortfolioAggregationSer
 // CORS configuration for Blazor WASM app (adjust origin if needed)
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowBlazorApp",
+    options.AddPolicy("AllowBlazorClient",
         policy =>
         {
-            policy.WithOrigins(builder.Configuration["AllowedCorsOrigin"] ?? "https://localhost:44632", // Default Blazor WASM port, update if different
-                               "http://localhost:44633") // Allow http for Blazor dev server
+        policy.WithOrigins("https://localhost:44632")// URL of your Blazor WebAssembly app
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
 });
+
+
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -36,9 +38,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseCors("AllowBlazorClient"); // Apply CORS policy
 
-app.UseCors("AllowBlazorApp"); // Apply CORS policy
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
