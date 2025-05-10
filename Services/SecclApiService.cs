@@ -59,7 +59,6 @@ namespace MYSECCLAPI.Services
             request.Content = content;
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
-            Console.WriteLine(await response.Content.ReadAsStringAsync());
             var data = await response.Content.ReadAsStringAsync();
             Root? myDeserializedClass = JsonConvert.DeserializeObject<Root?>(data);
             return myDeserializedClass;
